@@ -11,14 +11,17 @@ import XCTest
 final class ContactAppTests: XCTestCase {
     
     var sut: DatabaseService!
+    var viewModel: ContactListViewModel!
 
     override func setUpWithError() throws {
-        self.sut = DatabaseService()
+        self.sut = DatabaseService(names: [])
+        self.viewModel = ContactListViewModel(databaseService: sut)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
     override func tearDownWithError() throws {
         self.sut = nil
+        self.viewModel = nil
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
@@ -103,7 +106,9 @@ final class ContactAppTests: XCTestCase {
     }
     
     func testTwoSameFirstNameAndLastNameInitial() {
-        let names = ["Chad Boswack", "Brian Xpander", "Brian Xodus", "Brian Yapsor", "Andy Savage"]
+        let names = ["Chad Boswack", "Brian Xpander", "Brian Xodus", "Brian Yapsor", "Andy Savage", "Jason Davison", "Jason Cross", "Jason Schmitt", "Jason Doherty"]
+        
+        self.sut = DatabaseService(names: names)
         
         self.measure {
             let contacts = names.compactMap({
@@ -147,7 +152,14 @@ final class ContactAppTests: XCTestCase {
     }
     
     func testViewModelSortingFunction() {
+        let names = ["Jason Davison", "Jason Cross", "Jason Schmitt", "Jason Doherty"]
+        self.sut = DatabaseService(names: names)
+        self.viewModel = ContactListViewModel(databaseService: self.sut)
+        self.viewModel.bindContactNames()
+        let contactNames = self.viewModel.getContactNames()
         
+        XCTAssertEqual(names.count, contactNames.count)
+        XCTAssertEqual(contactNames, ["Jason C", "Jason Davison", "Jason Doherty", "Jason S"])
     }
     
 }

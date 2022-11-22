@@ -9,17 +9,13 @@ import Foundation
 
 final class DatabaseService {
     
-    public func retrieveContactsList() -> [Contact] {
-        return self.retrieveTestData().compactMap({
-            let nameComponents = $0.components(separatedBy: " ")
-            let firstName = nameComponents.first ?? ""
-            let lastName = nameComponents.count > 1 ? nameComponents.last : nil // Check if name has a last name by making sure string count > 1
-            return Contact(firstName: firstName, lastName: lastName)
-        })
+    let names: [String]
+    
+    init(names: [String]) {
+        self.names = names
     }
     
-    private func retrieveTestData() -> [String] {
-        return TestData.shared.contacts
+    public func getContactsList() -> [String] {
+        return self.names
     }
-    
 }
